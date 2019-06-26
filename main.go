@@ -1,16 +1,32 @@
 package main
 
 import (
+  "github.com/gorilla/mux"
   "fmt"
-  "log"
   "net/http"
+  "encoding/json"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+type Person struct {
+  Name string
+  Age int
+}
+
+func getVocabulary(w http.ResponseWriter, r *http.Request) {
+  d := Person{"Bob", 21}
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(d)
 }
 
 func main() {
-  http.HandleFunc("/", handler)
-  log.Fatal(http.ListenAndServe(":8080", nil))
+  router := mux.NewRouter()
+  router.HandleFunc("/api/vocabulary", getVocabulary).Methods("GET")
+
+  port := "8080"
+  fmt.Println(port)
+  err := http.ListenAndServe(":" + port, router)
+  if err != nil {
+    fmt.Print(err)
+  }
 }
