@@ -13,7 +13,7 @@ type Person struct {
 }
 
 func getVocabulary(w http.ResponseWriter, r *http.Request) {
-  d := Person{"Bob", 21}
+  d := Person{"Bobb", 24}
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(d)
