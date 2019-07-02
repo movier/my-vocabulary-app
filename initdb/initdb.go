@@ -7,6 +7,7 @@ import (
 )
 
 type Person struct {
+  gorm.Model
   Name string
   Age int
 }
