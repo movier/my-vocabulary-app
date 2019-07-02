@@ -7,13 +7,8 @@ import (
   "fmt"
   "net/http"
   "encoding/json"
+  "app/models"
 )
-
-type Person struct {
-  gorm.Model
-  Name string
-  Age int
-}
 
 func getVocabulary(w http.ResponseWriter, r *http.Request) {
   username := "postgres"
@@ -28,9 +23,9 @@ func getVocabulary(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(err)
   }
   
-  db.Create(&Person{Name: "Peter", Age: 22})
+  db.Create(&models.Person{Name: "Johnson", Age: 22})
 
-  var person []Person
+  var person []models.Person
   db.Find(&person)
 
   w.Header().Set("Content-Type", "application/json")
