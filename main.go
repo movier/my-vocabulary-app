@@ -34,8 +34,26 @@ func getVocabulary(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+  username := "postgres"
+  password := "postgres" 
+	dbName := "my_database" 
+	dbHost := "db" 
+
+
+	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
+	fmt.Println(dbUri)
+
+	db, dbErr := gorm.Open("postgres", dbUri)
+	if dbErr != nil {
+		fmt.Print(dbErr)
+	}
+	defer db.Close()
+
+  db.Debug().AutoMigrate(&models.Person{})
+
   router := mux.NewRouter()
   router.HandleFunc("/api/vocabulary", getVocabulary).Methods("GET")
+  // router.HandleFunc("/api/vocabulary", createVocabulary).Methods("POST")
 
   port := "8080"
   fmt.Println(port)
