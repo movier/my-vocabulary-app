@@ -10,19 +10,10 @@ import (
   "app/models"
 )
 
-func getVocabulary(w http.ResponseWriter, r *http.Request) {
-  username := "postgres"
-  password := "postgres" 
-	dbName := "my_database" 
-	dbHost := "db" 
+var db *gorm.DB
 
-	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
-  
-  db, err := gorm.Open("postgres", dbUri)
-	if err != nil {
-		fmt.Print(err)
-  }
-  
+func getVocabulary(w http.ResponseWriter, r *http.Request) {
+
   db.Create(&models.Person{Name: "Johnson", Age: 22})
 
   var person []models.Person
@@ -43,12 +34,13 @@ func main() {
 	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
 	fmt.Println(dbUri)
 
-	db, dbErr := gorm.Open("postgres", dbUri)
+	conn, dbErr := gorm.Open("postgres", dbUri)
 	if dbErr != nil {
 		fmt.Print(dbErr)
 	}
-	defer db.Close()
+  defer conn.Close()
 
+  db = conn
   db.Debug().AutoMigrate(&models.Person{})
 
   router := mux.NewRouter()
