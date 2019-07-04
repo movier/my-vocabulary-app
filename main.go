@@ -8,6 +8,7 @@ import (
   "net/http"
   "encoding/json"
   "app/models"
+  "html/template"
 )
 
 var db *gorm.DB
@@ -22,6 +23,12 @@ func getVocabulary(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(person)
+}
+
+func uploadFile(w http.ResponseWriter, r *http.Request) {
+  p := &models.Person{Name: "title", Age: 22}
+  t, _ := template.ParseFiles("upload.html")
+  t.Execute(w, p)
 }
 
 func main() {
@@ -45,7 +52,7 @@ func main() {
 
   router := mux.NewRouter()
   router.HandleFunc("/api/vocabulary", getVocabulary).Methods("GET")
-  // router.HandleFunc("/api/vocabulary", createVocabulary).Methods("POST")
+  router.HandleFunc("/upload", uploadFile).Methods("GET")
 
   port := "8080"
   fmt.Println(port)
