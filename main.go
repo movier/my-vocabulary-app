@@ -3,6 +3,7 @@ package main
 import (
   "github.com/jinzhu/gorm"
   _ "github.com/jinzhu/gorm/dialects/postgres"
+  _ "github.com/jinzhu/gorm/dialects/sqlite"
   "github.com/gorilla/mux"
   "fmt"
   "net/http"
@@ -61,7 +62,7 @@ func receiveFile(w http.ResponseWriter, r *http.Request) {
   fmt.Printf("current dir: %+v\n", dir)
   // Create a temporary file within our temp-images directory that follows
   // a particular naming pattern
-  tempFile, err := ioutil.TempFile(dir + "/temp-images", "upload-*.png")
+  tempFile, err := ioutil.TempFile(dir + "/temp-images", "upload-*.db")
   if err != nil {
     fmt.Println("Create Error: %+v\n", err)
   }
@@ -75,6 +76,13 @@ func receiveFile(w http.ResponseWriter, r *http.Request) {
   }
   // write this byte array to our temporary file
   tempFile.Write(fileBytes)
+
+  sqlite, err := gorm.Open("sqlite3", tempFile.Name())
+  if err != nil {
+    fmt.Println("open sqlite error:", err)
+  }
+  defer sqlite.Close()
+
   // return that we have successfully uploaded our file!
   fmt.Fprintf(w, "Successfully Uploaded File\n")
 }
