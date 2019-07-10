@@ -29,6 +29,21 @@ func getVocabulary(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(person)
 }
 
+func getWord(w http.ResponseWriter, r *http.Request) {
+  lookup := &models.Lookup{
+    Word: models.Word{ID: "new"},
+    Usage: "This is a new test!",
+  }
+  db.Create(&lookup)
+
+  var lookups []models.Lookup
+  db.Preload("Word").Find(&lookups)
+
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(lookups)
+}
+
 func uploadFile(w http.ResponseWriter, r *http.Request) {
   p := &models.Person{Name: "title", Age: 22}
   t, _ := template.ParseFiles("upload.html")
@@ -104,10 +119,11 @@ func main() {
   defer conn.Close()
 
   db = conn
-  db.Debug().AutoMigrate(&models.Person{})
+  db.Debug().AutoMigrate(&models.Person{}, &models.Lookup{}, &models.Word{})
 
   router := mux.NewRouter()
   router.HandleFunc("/api/vocabulary", getVocabulary).Methods("GET")
+  router.HandleFunc("/api/word", getWord).Methods("GET")
   router.HandleFunc("/upload", uploadFile).Methods("GET")
   router.HandleFunc("/upload", receiveFile).Methods("POST")
 
