@@ -96,6 +96,16 @@ func receiveFile(w http.ResponseWriter, r *http.Request) {
   if err != nil {
     fmt.Println("open sqlite error:", err)
   }
+  rows, err := sqlite.Raw("select word_key, usage from lookups").Rows()
+  if err != nil {
+    fmt.Println(err)
+  }
+  for rows.Next() {
+    word_key := ""
+    usage := ""
+    rows.Scan(&word_key, &usage)
+    fmt.Printf("word: %+v, usage: %+v\n", word_key, usage)
+  }
   defer sqlite.Close()
 
   // return that we have successfully uploaded our file!
