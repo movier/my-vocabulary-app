@@ -30,11 +30,11 @@ func getVocabulary(w http.ResponseWriter, r *http.Request) {
 }
 
 func getWord(w http.ResponseWriter, r *http.Request) {
-  lookup := &models.Lookup{
-    Word: models.Word{ID: "new"},
-    Usage: "This is a new test!",
-  }
-  db.Create(&lookup)
+  // lookup := &models.Lookup{
+  //   Word: models.Word{ID: "new"},
+  //   Usage: "",
+  // }
+  // db.Create(&lookup)
 
   var lookups []models.Lookup
   db.Preload("Word").Find(&lookups)
@@ -105,6 +105,11 @@ func receiveFile(w http.ResponseWriter, r *http.Request) {
     usage := ""
     rows.Scan(&word_key, &usage)
     fmt.Printf("word: %+v, usage: %+v\n", word_key, usage)
+    lookup := &models.Lookup{
+      Word: models.Word{ID: word_key},
+      Usage: usage,
+    }
+    db.Create(&lookup)
   }
   defer sqlite.Close()
 
