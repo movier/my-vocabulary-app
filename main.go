@@ -37,7 +37,7 @@ func getWord(w http.ResponseWriter, r *http.Request) {
   // db.Create(&lookup)
 
   var lookups []models.Lookup
-  db.Preload("Word").Find(&lookups)
+  db.Preload("Word").Limit(100).Find(&lookups)
 
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
