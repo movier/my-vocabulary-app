@@ -9,4 +9,5 @@ type Lookup struct {
   Usage string
   WordID string
   Word Word
+  Words []Word `gorm:"many2many:lookup_words;"`
 }

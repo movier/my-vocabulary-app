@@ -122,7 +122,7 @@ func main() {
   defer conn.Close()
 
   db = conn
-  db.Debug().AutoMigrate(&models.Lookup{}, &models.Word{})
+  db.Debug().AutoMigrate(&models.Lookup{}, &models.Word{}, &models.Stem{})
 
   router := mux.NewRouter()
   router.HandleFunc("/api/word", getWord).Methods("GET")
