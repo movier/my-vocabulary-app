@@ -45,7 +45,7 @@ func getWord(w http.ResponseWriter, r *http.Request) {
 }
 
 func uploadFile(w http.ResponseWriter, r *http.Request) {
-  p := &models.Person{Name: "title", Age: 22}
+  p := &models.Stem{ID: "title", Definitions: "22"}
   t, _ := template.ParseFiles("upload.html")
   t.Execute(w, p)
 }
