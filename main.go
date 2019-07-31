@@ -17,18 +17,6 @@ import (
 
 var db *gorm.DB
 
-func getVocabulary(w http.ResponseWriter, r *http.Request) {
-
-  db.Create(&models.Person{Name: "Johnson", Age: 22})
-
-  var person []models.Person
-  db.Find(&person)
-
-  w.Header().Set("Content-Type", "application/json")
-  w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(person)
-}
-
 func getWord(w http.ResponseWriter, r *http.Request) {
   // lookup := &models.Lookup{
   //   Word: models.Word{ID: "new"},
@@ -134,10 +122,9 @@ func main() {
   defer conn.Close()
 
   db = conn
-  db.Debug().AutoMigrate(&models.Person{}, &models.Lookup{}, &models.Word{})
+  db.Debug().AutoMigrate(&models.Lookup{}, &models.Word{})
 
   router := mux.NewRouter()
-  router.HandleFunc("/api/vocabulary", getVocabulary).Methods("GET")
   router.HandleFunc("/api/word", getWord).Methods("GET")
   router.HandleFunc("/upload", uploadFile).Methods("GET")
   router.HandleFunc("/upload", receiveFile).Methods("POST")
