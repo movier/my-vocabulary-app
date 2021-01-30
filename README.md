@@ -2,6 +2,8 @@
 ```
 docker-compose up --build
 ```
+http://localhost:8080/upload
+
 # Database Migration
 ```
 docker exec -it my_postgres bash
